@@ -21,7 +21,7 @@
 "<"             { return INPUT; }
 "2>"            { return ERROR; }
 
-[0-9A-z*?/.-]*  {
+[0-9A-z*?/.\-@]*  {
 		  yylval.string = strdup(yytext);
 		  return ARG;
 		}

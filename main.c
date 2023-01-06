@@ -27,6 +27,7 @@ void errmsg (char *msg)
 	fprintf(stderr,"error: %s\n",msg);
 }
 
+// Annule le ^C
 void sig_hand() {
   rl_crlf();
   rl_reset_line_state();
@@ -57,6 +58,48 @@ void apply_redirects (struct cmd *cmd)
   }
 }
 
+
+int perform_cd(struct cmd *cmd) {
+  int fd_err = STDERR_FILENO;
+  if (cmd->error != NULL) fd_err = open(cmd->error, O_WRONLY | O_CREAT | O_APPEND, 0644);
+
+  char *dir = cmd->args[1];
+  if (cmd->args[2] != NULL) {
+    dprintf(fd_err, "cd: too many arguments");
+    return -1;
+  }
+  if (dir == NULL) dir = getenv("HOME");
+  
+  if (chdir(dir)) {
+    dprintf(fd_err, "cd: file %s doesn't exist\n", dir);
+    return -1;
+  }
+
+  return 0;
+}
+
+int perform_history(struct cmd *cmd) {
+  int fd_err = STDERR_FILENO;
+  if (cmd->error != NULL) fd_err = open(cmd->error, O_WRONLY | O_CREAT | O_APPEND, 0644);
+
+  HISTORY_STATE *myhist = history_get_history_state();
+  HIST_ENTRY **mylist = history_list();
+
+  int nb_entries = myhist->length < 500 ? myhist->length : 500;
+  if (cmd->args[1] != NULL) nb_entries = myhist->length < atoi(cmd->args[1]) ? myhist->length : atoi(cmd->args[1]);
+  if (cmd->args[2] != NULL) {
+    dprintf(fd_err, "history: too many arguments\n");
+    return -1;
+  }
+
+  int first_entry = myhist->length - nb_entries;
+  printf ("session history:\n");
+  for (int i = 0; i < nb_entries; i++) {
+      printf ("  %s\n", mylist[first_entry + i]->line);
+  }
+  return 0;
+}
+
 // The function execute() takes a command parsed at the command line.
 // The structure of the command is explained in output.c.
 // Returns the exit code of the command in question.
@@ -67,31 +110,9 @@ int execute (struct cmd *cmd)
 	{
 	    case C_PLAIN:
         if (strcmp(cmd->args[0],"cd") == 0) {
-          int fd_err = STDERR_FILENO;
-          if (cmd->error != NULL) fd_err = open(cmd->error, O_WRONLY | O_CREAT | O_APPEND, 0644);
-
-          char *dir = cmd->args[1];
-          if (cmd->args[2] != NULL) {
-            dprintf(fd_err, "cd: too many arguments");
-            return -1;
-          }
-          if (dir == NULL) dir = getenv("HOME");
-          
-          if (chdir(dir)) {
-            dprintf(fd_err, "cd: file %s doesn't exist\n", dir);
-            return -1;
-          }
-
-          return 0;
+          return perform_cd(cmd);
         } else if (strcmp(cmd->args[0], "history") == 0) {
-          HISTORY_STATE *myhist = history_get_history_state();
-          HIST_ENTRY **mylist = history_list();
-
-          printf ("session history:\n");
-          for (int i = 0; i < myhist->length; i++) {
-              printf ("  %s\n", mylist[i]->line);
-          }
-          return 0;
+          return perform_history(cmd);
         }
 
         if (fork()) { // PARENT PROCESS

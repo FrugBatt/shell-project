@@ -1,0 +1,182 @@
+\documentclass{report}
+
+%-----------------------------------
+%--- Hugoooo default latex header---
+%-----------------------------------
+
+%---PACKAGES---
+
+\usepackage[Glenn]{fncychap}
+
+\usepackage{fancyhdr}
+
+\usepackage[utf8x]{inputenc} 
+\usepackage[T1]{fontenc}      
+\usepackage[french]{babel} 
+
+\usepackage{array}
+
+\usepackage{mathtools}
+\usepackage{amssymb}
+\usepackage{mathrsfs}
+\usepackage{mathabx}
+
+\usepackage{xcolor}
+\usepackage{graphicx}
+
+\usepackage[a4paper]{geometry}
+\geometry{hscale=0.85,vscale=0.85,centering}
+
+%%\BB
+\newcommand{\QQ}{\mathbb{Q}}
+\newcommand{\WW}{\mathbb{W}}
+\newcommand{\EE}{\mathbb{E}}
+\newcommand{\RR}{\mathbb{R}}
+\newcommand{\TT}{\mathbb{T}}
+\newcommand{\YY}{\mathbb{Y}}
+\newcommand{\UU}{\mathbb{U}}
+\newcommand{\II}{\mathbf{1}}
+\newcommand{\OO}{\mathbb{O}}
+\newcommand{\PP}{\mathbb{P}}
+\renewcommand{\AA}{\mathbb{A}}
+\renewcommand{\SS}{\mathbb{S}}
+\newcommand{\DD}{\mathbb{D}}
+\newcommand{\FF}{\mathbb{F}}
+\newcommand{\GG}{\mathbb{G}}
+\newcommand{\HH}{\mathbb{H}}
+\newcommand{\JJ}{\mathbb{J}}
+\newcommand{\KK}{\mathbb{K}}
+\newcommand{\LL}{\mathbb{L}}
+\newcommand{\ZZ}{\mathbb{Z}}
+\newcommand{\XX}{\mathbb{X}}
+\newcommand{\CC}{\mathbb{C}}
+\newcommand{\VV}{\mathbb{V}}
+\newcommand{\BB}{\mathbb{B}}
+\newcommand{\NN}{\mathbb{N}}
+\newcommand{\MM}{\mathbb{M}}
+
+
+%%\CAL
+\newcommand{\A}{\mathcal{A}}
+\newcommand{\B}{\mathcal{B}}
+\newcommand{\C}{\mathcal{C}}
+\newcommand{\D}{\mathcal{D}}
+\newcommand{\E}{\mathcal{E}}
+\newcommand{\F}{\mathcal{F}}
+\newcommand{\G}{\mathcal{G}}
+\renewcommand{\H}{\mathcal{H}}
+\newcommand{\I}{\mathcal{I}}
+\newcommand{\J}{\mathcal{J}}
+\newcommand{\K}{\mathcal{K}}
+\renewcommand{\L}{\mathcal{L}}
+\newcommand{\M}{\mathcal{M}}
+\newcommand{\N}{\mathcal{N}}
+\renewcommand{\O}{\mathcal{O}}
+\renewcommand{\P}{\mathcal{P}}
+\newcommand{\Q}{\mathcal{Q}}
+\newcommand{\R}{\mathcal{R}}
+\renewcommand{\S}{\mathcal{S}}
+\newcommand{\T}{\mathcal{T}}
+\newcommand{\U}{\mathcal{U}}
+\newcommand{\V}{\mathcal{V}}
+\newcommand{\W}{\mathcal{W}}
+\newcommand{\X}{\mathcal{X}}
+\newcommand{\Y}{\mathcal{Y}}
+\newcommand{\Z}{\mathcal{Z}}
+
+%---COMMANDS---
+\newcommand{\function}[5]{\begin{array}[t]{lrcl}
+#1: & #2 & \longrightarrow & #3 \\
+    & #4 & \longmapsto & #5 \end{array}}
+    
+\newcommand{\vect}{\text{vect}}
+\renewcommand{\ker}{\text{Ker}}
+\newcommand{\ens}[3]{\mathcal{#1}_{#2}(\mathbb{#3})}
+\newcommand{\ensmat}[2]{\ens{M}{#1}{#2}}
+\newcommand{\mat}{\text{Mat}}
+\newcommand{\comp}{\text{Comp}}
+\newcommand{\pass}{\text{Pass}}
+\renewcommand{\det}{\text{det}}
+\newcommand{\dev}{\text{Dev}}
+\newcommand{\com}{\text{Com}}
+\newcommand{\card}{\text{card}}
+\newcommand{\esc}{\text{Esc}}
+\newcommand{\cpm}{\text{CPM}}
+\newcommand{\dif}{\mathop{}\!\textnormal{\slshape d}}
+\newcommand{\enc}[3]{\left#1 #2 \right#3}
+\newcommand{\ent}[2]{\enc{#1}{#2}{#1}}
+\newcommand{\norm}[1]{\ent{\|}{#1}}
+\newcommand{\pth}[1]{\left( #1 \right)}
+\newcommand{\trans}{\text{Trans}}
+\newcommand{\ind}{\text{Ind}}
+\newcommand{\tfinite}{\text{T-finite}}
+\newcommand{\tinfinite}{\text{T-infinite}}
+
+%---HEAD---
+
+\title{}
+\author{}
+\date{\today}
+
+\renewcommand\thesection{\arabic{section}}
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{Shell}
+\chead{Architecture et Système}
+\rhead{Fruchet Hugo}
+\cfoot{\thepage}
+
+\begin{document}
+
+\section{Projet : Création d'un shell en C}
+
+\subsection{Compilation et exécution du shell}
+
+Le projet utilise un \verb|Makefile| pour compiler correctement. De ce fait, pour compiler le projet, il suffit d'exécuter la commande \verb|make| dans le fichier courant du projet. \\
+Une fois la compilation du projet faite, un exécutable \verb|shell| est dans le projet, il suffit de l'exécuter avec la commande \verb|./shell| pour que shell se lance.
+
+\subsection{Réponses aux questions}
+
+\paragraph{1.}
+Pour exécuter une commande, le shell utilise la fonction \verb|execvp| car cette fonction prend 2 arguments :
+\begin{itemize}
+  \item L'exécutable (ou la commande) qu'on souhaite exécuter à la place de notre programme
+  \item Un tableau de chaîne de caractères représentant les arguments de l'appel
+\end{itemize}
+Ces arguments étant sous cette forme dans la structure \verb|struct cmd|, cette fonction est la plus appropriée
+
+\paragraph{2.}
+Le symbole pour une séquence de commandes est "\verb|;|" \\
+La seconde commande est exécutée quoiqu'il arrive, ce qui n'est pas le cas de l'opérateur \verb|&&| :
+\begin{itemize}
+  \item \verb|mkdir . ; echo "test"| : cette commande va échouer pour créer un fichier . (car il existe déjà par défaut), mais ensuite va afficher le mot "test"
+  \item \verb|mkdir . && echo "test"| : cette commande va échouer pour créer un fichier ., et la seconde commande ne sera donc pas exécutée
+\end{itemize}
+
+\paragraph{4.}
+Oui la commande s'exécute dans bash. \\
+Par exemple avec la commande 
+\begin{itemize}
+  \item \verb$(echo "un message" && echo "un second message") | wc$ va compter le nombre de mots et de caractères sur l'entrée donnée par les deux echo. Ainsi les parenthèses sont nécessaires 
+  \item \verb$echo "un message" && echo "un second message" | wc$ va afficher "un message" puis compter le nombre de mots et caractères du second echo (ce qui est différent de la commande sans parenthèses)
+\end{itemize}
+
+\paragraph{5.}
+Sans rien faire, CTRL-C va envoyer un signal SIGTERM au shell qui par défaut ferme le programme. De ce fait, CTRL-C ferme le shell. Pour empêcher cela, le shell va modifier le handler appelé par défaut lors de la réception du SIGTERM avec la fonction \verb|signal| (on va en plus résoudre les bugs graphiques généré par cet appel dans le nouvel handler). 
+
+\paragraph{6.}
+Sans rien faire, la commande \verb|ls > dump| exécute et affiche dans la sortie standard \verb|ls| (ce qui n'est pas ce qui est attendu)
+
+\paragraph{7.}
+Si on utilise \verb|dup2| à la place de \verb|pipe|, on va devoir rediriger la sortie dans l'entrée, et dans ce cas on ne créer pas de file-descriptor (on va juste rediriger le file-descriptor). Ceci peut amener à des résultats différents. La commande \verb$ls | wc$ avec \verb|dup2| on va afficher dans la sortie standard le résultat de \verb|ls|, puis le terminal laissera l'entrée à l'utilisateur pour écrire ce qui sera ensuite utilisé par \verb|wc| (alors qu'on veut seulement lire la sortie de \verb|ls|). De ce fait, la création d'un file-descriptor est nécessaire.
+
+\subsection{Exemples}
+\begin{itemize}
+  \item \verb|cat file| : l'exécution de cette commande va créer un processus fils qui va exécuter \verb|cat| avec les bons arguments. Une fois l'exécution terminée, le processus va mourir et le processus père (qui est le processus principal du shell) va continuer et attendre une prochaine fonction
+  \item \verb|echo "1" ; echo "2"| (ou avec \verb$&& ||$) : l'exécution de cette commande va exécuter la commande \verb|echo "1"|. Puis une fois fini on exécute la commande \verb|echo "2"|. La différence avec \verb|&&| ou \verb$||$, le shell va regarder la valeur de retour de la première commande pour savoir si elle à réussi ou non et donc exécuter la seconde commande si la valeur de retour est correcte.
+  \item \verb|ls > dump| : l'exécution de cette commande va créer un processus fils qui va d'abord mettre à jour ses file-descriptor : il va créer un file-descriptor qui correspondra à l'écriture dans le fichier \verb|dump|, il va ensuite remplacer le file-descriptor de la sortie standard par ce file-descriptor à l'aide de \verb|dup2|. Ce changement ne posera pas de problème par la suite car la modification n'est présente que dans le processus fils (et donc lors de la fin de ce processus la modification n'existera plus). Finalement, le programme exécute la commande ls dans le processus fils. (le shell fonctionne pareil avec les opérateurs \verb|>>| et \verb|<|).
+  \item \verb$(echo "1" && ls) | wc$ : l'exécution de cette commande va d'abord mettre à jour les file-descriptor pour le pipe. Ensuite, le shell exécutera les commandes dans la parenthèse. Une fois ces commandes exécutée, le shell exécutera la commande \verb|wc| avec les bons file-descriptor pour lire la sortie des premières commandes. Ainsi la prioriété des parenthèse est respectée.
+\end{itemize}
+
+\end{document}
